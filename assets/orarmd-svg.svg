@@ -1,0 +1,18 @@
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="773" height="161" viewBox="0 0 773 161">
+  <defs>
+    <clipPath id="clip-Custom_Size_1">
+      <rect width="773" height="161"/>
+    </clipPath>
+  </defs>
+  <g id="Custom_Size_1" data-name="Custom Size – 1" clip-path="url(#clip-Custom_Size_1)">
+    <g id="Group_3" data-name="Group 3" transform="translate(-128 -436)">
+      <g id="Group_2" data-name="Group 2" transform="translate(118 308)">
+        <text id="orar" transform="translate(0 284)" fill="#fff" font-size="291" font-family="HelveticaNeue-Bold, Helvetica Neue" font-weight="700"><tspan x="0" y="0">orar</tspan></text>
+      </g>
+      <text id="MD" transform="translate(698 591)" fill="#85ff7b" font-size="126" font-family="HelveticaNeue-Bold, Helvetica Neue" font-weight="700"><tspan x="0" y="0">MD</tspan></text>
+      <line id="Line_1" data-name="Line 1" y2="21.812" transform="translate(205.794 493.948)" fill="none" stroke="#fff" stroke-linecap="round" stroke-width="10"/>
+      <line id="Line_2" data-name="Line 2" x2="16.359" y2="17.45" transform="translate(205.794 516.851)" fill="none" stroke="#fff" stroke-linecap="round" stroke-width="10"/>
+      <ellipse id="Ellipse_1" data-name="Ellipse 1" cx="19.5" cy="20" rx="19.5" ry="20" transform="translate(650 554)" fill="#fff"/>
+    </g>
+  </g>
+</svg>
