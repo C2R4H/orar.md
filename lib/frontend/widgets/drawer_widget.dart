@@ -8,92 +8,11 @@ import '../../backend/database/auth_database.dart';
 Widget drawerWidget(context, _selectBloc) {
   AuthMethods authMethods = AuthMethods(); //REMOVE AFTER TESTING
 
+  double height = MediaQuery.of(context).size.height;
   double width = MediaQuery.of(context).size.width;
 
-  bool menu = true;
-
-  Widget colegiuGrupaChoose() {
-    return BlocBuilder<SelectBloc, SelectState>(builder: (context, state) {
-      if (state is SelectStateLoading) {
-        return const CircularProgressIndicator.adaptive();
-      }
-      if (state is SelectStateColegiiLoaded) {
-        return ListView(
-          children: [
-            Container(
-              alignment: Alignment.center,
-              color: Colors.black,
-              height: MediaQuery.of(context).size.height / 6,
-              child: Text(
-                'Grupe',
-                style: TextStyle(
-                  fontWeight: FontWeight.bold,
-                  fontSize: MediaQuery.of(context).size.height / 30,
-                ),
-              ),
-            ),
-            TextButton(
-              onPressed: () async {
-                await authMethods.logout();
-              },
-              child: Text('log out'),
-            ),
-            ListView.builder(
-              shrinkWrap: true,
-              itemCount: state.colegiuModelList.length,
-              itemBuilder: (context, index) {
-                return ListTile(
-                  title: Text(state.colegiuModelList[index].colegiuName),
-                  onTap: () {
-                    _selectBloc.add(LoadGroups(state.colegiuModelList[index]));
-                  },
-                );
-              },
-            ),
-          ],
-        );
-      }
-      if (state is SelectStateChoosedColegiu) {
-        return ListView(
-          children: [
-            Container(
-              alignment: Alignment.center,
-              color: Colors.black,
-              height: MediaQuery.of(context).size.height / 6,
-              child: Text(
-                'Grupe',
-                style: TextStyle(
-                  fontWeight: FontWeight.bold,
-                  fontSize: MediaQuery.of(context).size.height / 30,
-                ),
-              ),
-            ),
-            ListView.builder(
-              shrinkWrap: true,
-              itemCount: state.colegiuModel.listaGrupeName.length,
-              itemBuilder: (context, index) {
-                return ListTile(
-                  title: Text(state.colegiuModel.listaGrupeName[index]),
-                  onTap: () {
-                    _selectBloc.add(LoadOrar(
-                        state.colegiuModel.listaGrupeName[index],
-                        state.colegiuModel.colegiuID));
-                  },
-                );
-              },
-            ),
-          ],
-        );
-      }
-      return ListView(
-        children: [],
-      );
-    });
-  }
-
-  return Drawer(
-    backgroundColor: const Color(0xff212121).withOpacity(0.96),
-    child: BlocListener<SelectBloc, SelectState>(
+  Widget drawerMobile(){
+    return  BlocListener<SelectBloc, SelectState>(
       listener: (context, state) {
         if (state is SelectStateChoosedGroup) {
           Navigator.of(context).pushAndRemoveUntil(
@@ -359,6 +278,242 @@ Widget drawerWidget(context, _selectBloc) {
           ],
         );
       }),
-    ),
-  );
+    );
+  }
+
+  Widget drawerDesktop(){
+
+    return  BlocListener<SelectBloc, SelectState>(
+      listener: (context, state) {
+        if (state is SelectStateChoosedGroup) {
+          Navigator.of(context).pushAndRemoveUntil(
+              MaterialPageRoute(builder: (context) => screen_controller()),
+              (Route<dynamic> route) => false);
+        }
+      },
+      child: BlocBuilder<SelectBloc, SelectState>(builder: (context, state) {
+        if (state is SelectStateLoading) {
+          return const CircularProgressIndicator.adaptive();
+        }
+        if (state is SelectStateColegiiLoaded) {
+          return ListView(
+            children: [
+              Container(
+                alignment: Alignment.center,
+                color: Color(0xff121212),
+                height: MediaQuery.of(context).size.height / 6,
+                child: Text(
+                  'Instituții ',
+                  style: TextStyle(
+                    fontWeight: FontWeight.bold,
+                    fontSize: MediaQuery.of(context).size.height / 30,
+                  ),
+                ),
+              ),
+              /* TextButton(
+                onPressed: () async {
+                  await authMethods.logout();
+                },
+                child: Text('log out'),
+              ),*/
+              ListView.builder(
+                shrinkWrap: true,
+                itemCount: state.colegiuModelList.length,
+                itemBuilder: (context, index) {
+                  return Column(
+                    children: [
+                      ListTile(
+                        title: Text(state.colegiuModelList[index].colegiuName),
+                        onTap: () {
+                          _selectBloc
+                              .add(LoadGroups(state.colegiuModelList[index]));
+                        },
+                      ),
+                      Divider(
+                        indent: 0,
+                      ),
+                    ],
+                  );
+                },
+              ),
+            ],
+          );
+        }
+        if (state is SelectStateChoosedColegiu) {
+          return ListView(
+            children: [
+              Container(
+                alignment: Alignment.center,
+                color: Color(0xff121212),
+                height: MediaQuery.of(context).size.height / 6,
+                child: Text(
+                  'Grupe',
+                  style: TextStyle(
+                    fontWeight: FontWeight.bold,
+                    fontSize: MediaQuery.of(context).size.height / 30,
+                  ),
+                ),
+              ),
+              ListView.builder(
+                shrinkWrap: true,
+                itemCount: state.colegiuModel.listaGrupeName.length,
+                itemBuilder: (context, index) {
+                  return ListTile(
+                    title: Text(state.colegiuModel.listaGrupeName[index]),
+                    onTap: () {
+                      _selectBloc.add(LoadOrar(
+                          state.colegiuModel.listaGrupeName[index],
+                          state.colegiuModel.colegiuID));
+                    },
+                  );
+                },
+              ),
+            ],
+          );
+        }
+        return ListView(
+          children: [
+            const SizedBox(height: 10),
+            Container(
+              margin: EdgeInsets.symmetric(horizontal: height / 35),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    'Instituții de învățământ',
+                    style: TextStyle(
+                      color: Color(0xffA1A1A1),
+                      fontSize: height / 35,
+                    ),
+                  ),
+                  Column(
+                    children: [
+                      ListTile(
+                        enabled: false,
+                        onTap: () async {
+                          //await _selectBloc.add(LoadColegii('universitate'));
+                        },
+                        title: Text(
+                          'Universitate',
+                          style: TextStyle(
+                            fontSize: height / 30,
+                          ),
+                        ),
+                        minLeadingWidth: 15,
+                        contentPadding:
+                            EdgeInsets.symmetric(horizontal: 0, vertical: 0),
+                        leading: Icon(Icons.school),
+                      ),
+                      ListTile(
+                        onTap: () async {
+                          await _selectBloc.add(LoadColegii('colegii'));
+                        },
+                        title: Text(
+                          'Colegiu',
+                          style: TextStyle(
+                            fontSize: height / 30,
+                          ),
+                        ),
+                        minLeadingWidth: 15,
+                        minVerticalPadding: 10,
+                        contentPadding:
+                            EdgeInsets.symmetric(horizontal: 0, vertical: 0),
+                        leading: Icon(Icons.school),
+                      ),
+                      ListTile(
+                        onTap: () async {
+                          await _selectBloc.add(LoadColegii('scoala'));
+                        },
+                        title: Text(
+                          'Școală',
+                          style: TextStyle(
+                            fontSize: height / 30,
+                          ),
+                        ),
+                        minLeadingWidth: 15,
+                        minVerticalPadding: 10,
+                        contentPadding:
+                            EdgeInsets.symmetric(horizontal: 0, vertical: 0),
+                        leading: Icon(Icons.school),
+                      ),
+                    ],
+                  ),
+                ],
+              ),
+            ),
+            SizedBox(height: 15),
+            Container(
+              margin: EdgeInsets.symmetric(horizontal: height/ 35),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    'Altele',
+                    style: TextStyle(
+                      color: Color(0xffA1A1A1),
+                      fontSize: height / 35,
+                    ),
+                  ),
+                  Container(
+                    child: Column(
+                      children: [
+                        ListTile(
+                        enabled: false,
+                          onTap: () {},
+                          title: Text(
+                            'Setări',
+                            style: TextStyle(
+                              fontSize: height / 30,
+                            ),
+                          ),
+                          minLeadingWidth: 15,
+                          minVerticalPadding: 10,
+                          contentPadding:
+                              EdgeInsets.symmetric(horizontal: 0, vertical: 0),
+                          leading: Icon(Icons.settings),
+                        ),
+                        ListTile(
+                        enabled: false,
+                          onTap: () {},
+                          title: Text(
+                            'Informații',
+                            style: TextStyle(
+                              fontSize: height / 30,
+                            ),
+                          ),
+                          minLeadingWidth: 15,
+                          minVerticalPadding: 10,
+                          contentPadding:
+                              EdgeInsets.symmetric(horizontal: 0, vertical: 0),
+                          leading: Icon(Icons.info_outlined),
+                        ),
+                      ],
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ],
+        );
+      }),
+    );
+  }
+
+
+
+  if(MediaQuery.of(context).size.width<600){
+    print('Mobile');
+    return Drawer(
+      backgroundColor: const Color(0xff212121).withOpacity(0.96),
+      child: drawerMobile(),
+    );
+  }else{
+    print('Desktop');
+    return Container(
+      color: const Color(0xff212121).withOpacity(0.96),
+      child: drawerDesktop(),
+    );
+  }
+
+
 }

@@ -21,26 +21,14 @@ class OrarScreenState extends State<orar_screen> {
       padding: const EdgeInsets.symmetric(horizontal: 5),
       child: ListView(
         children: [
-          const SizedBox(height: 10),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
+          Wrap(
+            alignment: WrapAlignment.spaceBetween,
+            direction: Axis.horizontal,
+            children: <Widget>[
               orarContainer(context, widget.orar.luni, 'Luni'),
               orarContainer(context, widget.orar.marti, 'Marti'),
-            ],
-          ),
-          const SizedBox(height: 10),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
               orarContainer(context, widget.orar.miercuri, 'Miercuri'),
               orarContainer(context, widget.orar.joi, 'Joi'),
-            ],
-          ),
-          const SizedBox(height: 10),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
               orarContainer(context, widget.orar.vineri, 'Vineri'),
             ],
           ),
@@ -88,7 +76,6 @@ class orarDialog extends StatelessWidget {
         highlightColor: Colors.transparent,
         splashColor: Colors.transparent,
         hoverColor: Colors.transparent,
-        //splashFactory: NoSplash.splashFactory,
         onTap: () {
           Navigator.pop(context);
         },
@@ -130,6 +117,7 @@ class orarDialog extends StatelessWidget {
                           ),
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
+                            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                             children: [
                               Row(
                                 mainAxisAlignment:
@@ -161,7 +149,7 @@ class orarDialog extends StatelessWidget {
                                 style: TextStyle(
                                   fontSize: width / 20,
                                   fontWeight: FontWeight.w300,
-                                  color: const Color(0xff717171),
+                                  color: const Color(0xffa1a1a1),
                                   decoration: TextDecoration.none,
                                 ),
                               ),
@@ -346,6 +334,10 @@ class orarDialog extends StatelessWidget {
 Widget orarContainer(context, List<LectieModel> day, String ziNume) {
   double width = MediaQuery.of(context).size.width;
 
+  if (width > 500) {
+    width = 500;
+  }
+
   Widget buildAnimatedText(String text) => Marquee(
         text: text,
         velocity: 20,
@@ -359,148 +351,163 @@ Widget orarContainer(context, List<LectieModel> day, String ziNume) {
         ),
       );
 
-  return Hero(
-    tag: day,
-    child: Material(
-      type: MaterialType.transparency,
-      child: InkWell(
-        splashColor: Colors.transparent,
-        hoverColor: Colors.transparent,
-        borderRadius: BorderRadius.circular(15),
-        splashFactory: InkRipple.splashFactory,
-        enableFeedback: true,
-        onTap: () {
-          HapticFeedback.lightImpact();
-          Navigator.of(context).push(
-            PageRouteBuilder(
-              opaque: false, // set to false
-              pageBuilder: (_, __, ___) => orarDialog(day, ziNume),
-            ),
-          );
-        },
-        onLongPress: () {
-          HapticFeedback.mediumImpact();
-          Navigator.of(context).push(
-            PageRouteBuilder(
-              opaque: false, // set to false
-              pageBuilder: (_, __, ___) => orarDialog(day, ziNume),
-            ),
-          );
-        },
-        child: ClipRRect(
+  return Container(
+    margin: EdgeInsets.symmetric(vertical: width / 150),
+    child: Hero(
+      tag: day,
+      child: Material(
+        type: MaterialType.transparency,
+        child: InkWell(
+          splashColor: Colors.transparent,
+          hoverColor: Colors.transparent,
           borderRadius: BorderRadius.circular(15),
-          child: BackdropFilter(
-            filter: ImageFilter.blur(sigmaX: 1.0, sigmaY: 1.0),
-            child: Ink(
-              height: width / 2.1,
-              width: width / 2.1,
-              decoration: BoxDecoration(
-                color: const Color(0xff242424).withOpacity(0.9),
-                borderRadius: BorderRadius.circular(15),
-                gradient: LinearGradient(
-                  begin: Alignment.topLeft,
-                  end: Alignment(
-                      0.1, 2.0), // 10% of the width, so there are ten blinds.
-                  colors: <Color>[
-                    Color(0xff272727),
-                    Color(0xff212121),
-                  ], // red to yellow
-                ),
+          splashFactory: InkRipple.splashFactory,
+          enableFeedback: true,
+          onTap: () {
+            HapticFeedback.lightImpact();
+            Navigator.of(context).push(
+              PageRouteBuilder(
+                opaque: false, // set to false
+                pageBuilder: (_, __, ___) => orarDialog(day, ziNume),
               ),
-              child: Container(
-                padding: EdgeInsets.all(width / 40),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      ziNume,
-                      style: TextStyle(
-                        decoration: TextDecoration.none,
-                        color: Colors.white,
-                        fontSize: width / 16,
-                        fontWeight: FontWeight.w600,
-                      ),
+            );
+          },
+          onLongPress: () {
+            HapticFeedback.mediumImpact();
+            Navigator.of(context).push(
+              PageRouteBuilder(
+                opaque: false, // set to false
+                pageBuilder: (_, __, ___) => orarDialog(day, ziNume),
+              ),
+            );
+          },
+          child: ClipRRect(
+            borderRadius: BorderRadius.circular(15),
+            child: BackdropFilter(
+              filter: ImageFilter.blur(sigmaX: 1.0, sigmaY: 1.0),
+              child: ConstrainedBox(
+                constraints: BoxConstraints(maxWidth: 400, maxHeight: 400),
+                child: Ink(
+                  height: width / 2.1,
+                  width: width / 2.1,
+                  decoration: BoxDecoration(
+                    color: const Color(0xff242424).withOpacity(0.9),
+                    borderRadius: BorderRadius.circular(15),
+                    gradient: LinearGradient(
+                      begin: Alignment.topLeft,
+                      end: Alignment(0.1,
+                          2.0), // 10% of the width, so there are ten blinds.
+                      colors: <Color>[
+                        Color(0xff272727),
+                        Color(0xff212121),
+                      ], // red to yellow
                     ),
-                    Text(
-                      '${day.first.startingTime} - ${day.last.endingTime}',
-                      style: TextStyle(
-                        fontSize: width / 25,
-                        fontWeight: FontWeight.w300,
-                        color: const Color(0xffa1a1a1),
-                        decoration: TextDecoration.none,
-                      ),
-                    ),
-                    const Divider(),
-                    SizedBox(
-                      height: width / 4.2,
-                      child: ListView.builder(
-                          shrinkWrap: true,
-                          itemCount: day.length,
-                          itemBuilder: (context, index) {
-                            return Column(
-                              children: [
-                                Row(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
+                  ),
+                  child: Container(
+                    padding: EdgeInsets.all(width / 40),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          ziNume,
+                          style: TextStyle(
+                            decoration: TextDecoration.none,
+                            color: Colors.white,
+                            fontSize: width / 16,
+                            fontWeight: FontWeight.w600,
+                          ),
+                        ),
+                        Text(
+                          '${day.first.startingTime} - ${day.last.endingTime}',
+                          style: TextStyle(
+                            fontSize: width / 25,
+                            fontWeight: FontWeight.w300,
+                            color: const Color(0xffa1a1a1),
+                            decoration: TextDecoration.none,
+                          ),
+                        ),
+                        const Divider(),
+                        SizedBox(
+                          height: width / 4.2,
+                          child: ListView.builder(
+                              shrinkWrap: true,
+                              itemCount: day.length,
+                              itemBuilder: (context, index) {
+                                return Column(
                                   children: [
-                                    SizedBox(
-                                      width: width / 2.8,
-                                      child: Row(
-                                        children: [
-                                          Text(
-                                            '${day[index].perecheId}',
-                                            style: TextStyle(
-                                              fontWeight: FontWeight.w400,
-                                              color: Colors.white,
-                                              decoration: TextDecoration.none,
-                                              fontSize: width / 30,
-                                            ),
-                                          ),
-                                          SizedBox(width: width / 30),
-                                          Column(
-                                            mainAxisAlignment:
-                                                MainAxisAlignment.spaceBetween,
-                                            crossAxisAlignment:
-                                                CrossAxisAlignment.start,
+                                    Row(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      children: [
+                                        SizedBox(
+                                          width: width / 2.8,
+                                          child: Row(
                                             children: [
-                                              day[index].perecheNume.length < 18
-                                                  ? Text(
-                                                      day[index].perecheNume,
-                                                      style: TextStyle(
-                                                        fontSize: width / 25,
-                                                        fontWeight:
-                                                            FontWeight.w400,
-                                                        color: Colors.white,
-                                                        decoration:
-                                                            TextDecoration.none,
-                                                      ),
-                                                    )
-                                                  : SizedBox(
-                                                      width: width / 3.4,
-                                                      height: width / 18,
-                                                      child: buildAnimatedText(
+                                              Text(
+                                                '${day[index].perecheId}',
+                                                style: TextStyle(
+                                                  fontWeight: FontWeight.w400,
+                                                  color: Colors.white,
+                                                  decoration:
+                                                      TextDecoration.none,
+                                                  fontSize: width / 30,
+                                                ),
+                                              ),
+                                              SizedBox(width: width / 30),
+                                              Column(
+                                                mainAxisAlignment:
+                                                    MainAxisAlignment
+                                                        .spaceBetween,
+                                                crossAxisAlignment:
+                                                    CrossAxisAlignment.start,
+                                                children: [
+                                                  day[index]
+                                                              .perecheNume
+                                                              .length <
+                                                          18
+                                                      ? Text(
                                                           day[index]
-                                                              .perecheNume),
-                                                    ),
+                                                              .perecheNume,
+                                                          style: TextStyle(
+                                                            fontSize:
+                                                                width / 25,
+                                                            fontWeight:
+                                                                FontWeight.w400,
+                                                            color: Colors.white,
+                                                            decoration:
+                                                                TextDecoration
+                                                                    .none,
+                                                          ),
+                                                        )
+                                                      : SizedBox(
+                                                          width: width / 3.4,
+                                                          height: width / 18,
+                                                          child: buildAnimatedText(
+                                                              day[index]
+                                                                  .perecheNume),
+                                                        ),
+                                                ],
+                                              ),
                                             ],
                                           ),
-                                        ],
+                                        ),
+                                      ],
+                                    ),
+                                    SizedBox(
+                                      width: width / 1.4,
+                                      child: const Divider(
+                                        indent: 0,
+                                        color: Color(0xff616161),
+                                        endIndent: 0,
                                       ),
                                     ),
                                   ],
-                                ),
-                                SizedBox(
-                                  width: width / 1.4,
-                                  child: const Divider(
-                                    indent: 0,
-                                    color: Color(0xff616161),
-                                    endIndent: 0,
-                                  ),
-                                ),
-                              ],
-                            );
-                          }),
+                                );
+                              }),
+                        ),
+                      ],
                     ),
-                  ],
+                  ),
                 ),
               ),
             ),
