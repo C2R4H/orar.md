@@ -21,6 +21,7 @@ Widget drawerWidget(context, _selectBloc) {
         }
       },
       child: BlocBuilder<SelectBloc, SelectState>(builder: (context, state) {
+        print(state);
         if (state is SelectStateLoading) {
           return const CircularProgressIndicator.adaptive();
         }
@@ -53,6 +54,10 @@ Widget drawerWidget(context, _selectBloc) {
                     children: [
                       ListTile(
                         title: Text(state.colegiuModelList[index].colegiuName),
+                    leading: Image(
+                      image: AssetImage('assets/csaflogo.png'),
+                      height: MediaQuery.of(context).size.width / 15,
+                    ),
                         onTap: () {
                           _selectBloc
                               .add(LoadGroups(state.colegiuModelList[index]));
@@ -323,6 +328,14 @@ Widget drawerWidget(context, _selectBloc) {
                   return Column(
                     children: [
                       ListTile(
+                          tileColor: Colors.white,
+                          selectedTileColor: Colors.black,
+                    leading: Padding(
+                        padding: EdgeInsets.symmetric(vertical: 10),
+                        child: Image(
+                      image: AssetImage('assets/csaflogo.png'),
+                      height: MediaQuery.of(context).size.width / 45,
+                    ),),
                         title: Text(state.colegiuModelList[index].colegiuName),
                         onTap: () {
                           _selectBloc
