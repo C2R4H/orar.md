@@ -13,10 +13,15 @@ import '../../../midend/user_model.dart';
 import '../../../midend/bloc/select_bloc/select_bloc.dart';
 import '../../../midend/bloc/orar_bloc/orar_bloc.dart';
 
-
-class MobileLayout extends StatelessWidget {
+class MobileLayout extends StatefulWidget{
   final UserModel userModel;
   MobileLayout(this.userModel);
+  @override
+  _MobileLayoutState createState()=> _MobileLayoutState();
+}
+
+
+class _MobileLayoutState extends State<MobileLayout>{
 
   final OrarBloc _orarBloc = OrarBloc();
   final SelectBloc selectBloc = SelectBloc();
@@ -27,7 +32,7 @@ class MobileLayout extends StatelessWidget {
     double height = MediaQuery.of(context).size.height;
     double width = MediaQuery.of(context).size.width;
 
-    _orarBloc.add(GetOrarData(userModel));
+    _orarBloc.add(GetOrarData(widget.userModel));
 
     return DefaultTabController(
       length: 3,
@@ -54,7 +59,7 @@ class MobileLayout extends StatelessWidget {
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
                                 Text(
-                                  userModel.grupaName,
+                                  widget.userModel.grupaName,
                                   style: TextStyle(
                                     fontWeight: FontWeight.bold,
                                     fontSize:
@@ -62,7 +67,7 @@ class MobileLayout extends StatelessWidget {
                                   ),
                                 ),
                                 Text(
-                                  userModel.colegiuName,
+                                  widget.userModel.colegiuName,
                                   style: TextStyle(
                                     fontWeight: FontWeight.w300,
                                     fontSize:
@@ -78,7 +83,7 @@ class MobileLayout extends StatelessWidget {
                       ],
                     ),
                   ),
-                  TabBar(
+                  const TabBar(
                     indicatorColor: Color(0xff7DFF6C),
                     unselectedLabelColor: Color(0xff515151),
                     tabs: <Widget>[
@@ -92,7 +97,7 @@ class MobileLayout extends StatelessWidget {
             ),
             actions: [
               Container(
-                margin: EdgeInsets.symmetric(horizontal: 15),
+                margin: const EdgeInsets.symmetric(horizontal: 15),
                 child: Center(
                   child: Text(
                     'Timp',
